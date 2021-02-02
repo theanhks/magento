@@ -1,0 +1,3 @@
+ALTER USER 'root'@'%' IDENTIFIED BY '*Dr@g0n#';
+GRANT ALL ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;

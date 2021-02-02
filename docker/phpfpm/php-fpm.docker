@@ -1,0 +1,36 @@
+FROM centos:7.8.2003
+MAINTAINER Nguyen Xuan Nam xuannam0205@gmail.com
+RUN yum update -y && \
+    yum install -y epel-release
+
+RUN yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
+    yum install -y yum-utils && \
+    yum-config-manager --enable remi-php74 && \
+    yum -y update
+
+RUN yum install -y vim git unzip zip php-fpm php-xml php-cli php-bcmath php-dba php-gd php-intl php-mbstring php-mysql  \
+php-pdo php-soap php-pecl-apcu php-pecl-imagick php-devel php-pear php-xdebug \
+php-imap php-zip wget
+RUN yum install gcc gcc-c++ autoconf automake
+#RUN pecl install Xdebug
+RUN yum install -y htop
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php && \
+   mv composer.phar /usr/local/bin/composer
+RUN composer self-update --1
+RUN useradd -M -d /opt/app -s /bin/false nginx
+
+RUN mkdir -p /run/php-fpm && \
+    chown nginx:nginx /run/php-fpm
+
+RUN mkdir -p /var/lib/php/session && \
+    chown nginx:nginx /var/lib/php/session
+
+COPY ./php-fpm.conf /etc/php-fpm.conf
+COPY ./www.conf /etc/php-fpm.d/www.conf
+COPY ./php.ini /etc/php.ini
+#COPY ./xdebug.ini /etc/php.d/xdebug.ini
+
+RUN yum clean all
+#if daemonize = yes add -F -R NamNguyen
+CMD php-fpm -F -R

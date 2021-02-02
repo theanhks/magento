@@ -1,0 +1,6 @@
+FROM centos:7.8.2003
+MAINTAINER Nguyen Xuan Nam xuannam0205@gmail.com
+RUN yum update -y && \
+    yum install -y epel-release
+#install xdebug
+RUN yum -y install php-xdebug
